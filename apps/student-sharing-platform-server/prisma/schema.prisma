@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  name      String?
+  studentId Int?
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  createdAt    DateTime      @default(now())
+  description  String?
+  donor        String?
+  id           String        @id @default(cuid())
+  itemName     String?
+  requests     Request[]
+  transactions Transaction[]
+  updatedAt    DateTime      @updatedAt
+}
+
+model Transaction {
+  createdAt       DateTime  @default(now())
+  giver           String?
+  id              String    @id @default(cuid())
+  item            Item?     @relation(fields: [itemId], references: [id])
+  itemId          String?
+  receiver        String?
+  transactionDate DateTime?
+  updatedAt       DateTime  @updatedAt
+}
+
+model Request {
+  createdAt   DateTime  @default(now())
+  id          String    @id @default(cuid())
+  item        Item?     @relation(fields: [itemId], references: [id])
+  itemId      String?
+  requestDate DateTime?
+  requester   String?
+  updatedAt   DateTime  @updatedAt
+}
